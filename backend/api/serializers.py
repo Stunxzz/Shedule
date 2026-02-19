@@ -7,10 +7,11 @@ from django.contrib.auth.password_validation import validate_password
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
+    avatar = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = AppUser
-        fields = ["email", "first_name", "last_name", "password", "password2"]
+        fields = ["email", "first_name", "last_name", "password", "password2", "avatar"]
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -18,20 +19,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data.pop('password2')
-        user = AppUser.objects.create_user(
-            email=validated_data["email"],
-            password=validated_data["password"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"]
-        )
+        validated_data.pop("password2")
+        avatar = validated_data.pop("avatar", None)
+        password = validated_data.pop("password")
+
+        user = AppUser(**validated_data)
+        if avatar:
+            user.avatar = avatar
+        user.set_password(password)
+        user.save()
+
         return user
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(use_url=True)
     class Meta:
         model = AppUser
-        fields = ["email", "first_name", "last_name"]
+        fields = ["email", "first_name", "last_name", "avatar"]
 
 
 class PermissionSerializer(serializers.ModelSerializer):

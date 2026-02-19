@@ -32,6 +32,11 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    avatar = models.ImageField(
+        upload_to="avatars/",
+        default="avatars/default.png",
+        blank=True
+    )
 
     date_joined = models.DateTimeField(auto_now_add=True)
 
