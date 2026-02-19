@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 
+from departments.models import Department
+
 
 class AppUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -39,6 +41,14 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     )
 
     date_joined = models.DateTimeField(auto_now_add=True)
+    # Relations
+    department = models.ForeignKey(
+        Department,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="users"
+    )
 
     objects = AppUserManager()
 

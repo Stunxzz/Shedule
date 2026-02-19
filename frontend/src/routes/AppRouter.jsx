@@ -8,6 +8,9 @@ import MainLayout from "../components/layout/MainLayout";
 import GroupsList from "../components/GroupsAndPermissions/GroupsList.jsx";
 import EditGroupPage from "../pages/Groups/EditGroupPage.jsx";
 import AdminRoute from "../components/AdminRoute.jsx";
+import EditDepartmentPage from "../pages/departments/EditDepartmentPage.jsx";
+import CreateDepartmentPage from "../pages/departments/CreateDepartmentPage.jsx";
+import DepartmentList from "../pages/departments/DepartmentList.jsx";
 
 // PrivateRoute - за защитени страници
 const PrivateRoute = ({children}) => {
@@ -35,6 +38,9 @@ export default function AppRouter() {
                     <Route path="/groups" element={<AdminRoute><GroupsList/></AdminRoute>}/>
                     <Route path="/groups/create" element={<AdminRoute><CreateGroupPage/></AdminRoute>}/>
                     <Route path="/groups/edit/:id" element={<AdminRoute><EditGroupPage/></AdminRoute>}/>
+                    <Route path="/departments" element={<PrivateRoute><DepartmentList/></PrivateRoute>}/>
+                    <Route path="/departments/create" element={<PrivateRoute><CreateDepartmentPage/></PrivateRoute>}/>
+                    <Route path="/departments/edit/:id" element={<PrivateRoute><EditDepartmentPage/></PrivateRoute>}/>
                 </Route>
                 <Route path="/" element={<Navigate to="/login"/>}/>
             </Routes>
