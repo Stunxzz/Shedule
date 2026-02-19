@@ -7,7 +7,7 @@ from .serializers import AddUserToGroupSerializer, GroupSerializer, PermissionSe
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().prefetch_related('permissions')
     serializer_class = GroupSerializer
 
     @action(detail=True, methods=['post'])
