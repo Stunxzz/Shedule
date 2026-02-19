@@ -10,8 +10,10 @@ import {
     InputAdornment,
     IconButton,
     Stack,
+    FormHelperText,
+    Avatar,
 } from "@mui/material";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {Visibility, VisibilityOff, UploadFile} from "@mui/icons-material";
 import api from "../api/axios";
 import {keyframes} from "@emotion/react";
 import {Link} from "react-router-dom";
@@ -34,6 +36,7 @@ export default function RegisterPage() {
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
+    const [avatar, setAvatar] = useState(null);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -50,25 +53,29 @@ export default function RegisterPage() {
         }
 
         try {
-            await api.post("register/", {
-                email,
-                first_name: firstName,
-                last_name: lastName,
-                password,
-                password2,
+            const formData = new FormData();
+            formData.append("email", email);
+            formData.append("first_name", firstName);
+            formData.append("last_name", lastName);
+            formData.append("password", password);
+            formData.append("password2", password2);
+            if (avatar) formData.append("avatar", avatar);
+
+            await api.post("register/", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
             });
+
             setSuccess("Registration successful. You can login now.");
             setEmail("");
             setFirstName("");
             setLastName("");
             setPassword("");
             setPassword2("");
+            setAvatar(null);
         } catch (err) {
             if (err.response && err.response.data) {
                 const data = err.response.data;
-                const messages = Object.keys(data).map((field) => {
-                    return data[field].join(" ");
-                });
+                const messages = Object.keys(data).map(field => data[field].join(" "));
                 setError(messages.join(" | "));
             } else {
                 setError("Registration failed. Check input or email already exists.");
@@ -78,17 +85,14 @@ export default function RegisterPage() {
 
     return (
         <Container
-            maxWidth="sm" sx={{
-            minHeight: "100vh",
-            display: "flex",
-            justifyContent: "center",
-
-            // 👇 ключовото тук
-            alignItems: {xs: "flex-start", md: "center"},
-
-            // малко padding за мобилни
-            py: {xs: 3, md: 0},
-        }}
+            maxWidth="sm"
+            sx={{
+                minHeight: "100vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: {xs: "flex-start", md: "center"},
+                py: {xs: 3, md: 0},
+            }}
         >
             <Card sx={{width: "100%", p: {xs: 2, sm: 4}, boxShadow: 6, borderRadius: 3}}>
                 <CardContent>
@@ -133,6 +137,7 @@ export default function RegisterPage() {
                             onChange={(e) => setLastName(e.target.value)}
                             required
                         />
+
                         <TextField
                             label="Password"
                             type={showPassword ? "text" : "password"}
@@ -143,7 +148,10 @@ export default function RegisterPage() {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+                                        <IconButton
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            edge="end"
+                                        >
                                             {showPassword ? <VisibilityOff/> : <Visibility/>}
                                         </IconButton>
                                     </InputAdornment>
@@ -160,21 +168,44 @@ export default function RegisterPage() {
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <IconButton onClick={() => setShowPassword2((prev) => !prev)} edge="end">
+                                        <IconButton
+                                            onClick={() => setShowPassword2((prev) => !prev)}
+                                            edge="end"
+                                        >
                                             {showPassword2 ? <VisibilityOff/> : <Visibility/>}
                                         </IconButton>
                                     </InputAdornment>
                                 ),
                             }}
                         />
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <Avatar
+                                src={avatar ? URL.createObjectURL(avatar) : ""}
+                                sx={{width: 46, height: 46}}
+                            />
+                            <Button
+                                variant="outlined"
+                                component="label"
+                                startIcon={<UploadFile />}
+                            >
+                                Upload Avatar
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    hidden
+                                    onChange={(e) => setAvatar(e.target.files[0])}
+                                />
+                            </Button>
+                        </Stack>
+                        <FormHelperText>Optional</FormHelperText>
 
-                        <Button type="submit" variant="contained" fullWidth sx={{py: 1.5}}>
+                        <Button type="submit" variant="contained">
                             Register
                         </Button>
 
                         <Stack direction="row" justifyContent="center" spacing={1}>
-                            <Typography variant="body2" alignSelf="center">Already have an account?</Typography>
-                            <Button component={Link} to="/login" size="small">
+                            {/*<Typography variant="body2" alignSelf="center">Already have an account?</Typography>*/}
+                            <Button component={Link} to="/login">
                                 Login
                             </Button>
                         </Stack>
