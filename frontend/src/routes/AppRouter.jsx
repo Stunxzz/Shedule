@@ -3,6 +3,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import {useAuth} from "../context/useAuth";
+import MainLayout from "../components/layout/MainLayout";
 
 // PrivateRoute - за защитени страници
 const PrivateRoute = ({children}) => {
@@ -18,13 +19,18 @@ const PublicRoute = ({children}) => {
     return !user ? children : <Navigate to="/profile"/>;
 };
 
+
 export default function AppRouter() {
     return (
         <Router>
             <Routes>
                 <Route path="/login" element={<PublicRoute><LoginPage/></PublicRoute>}/>
                 <Route path="/register" element={<PublicRoute><RegisterPage/></PublicRoute>}/>
-                <Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
+                <Route element={<MainLayout/>}>
+                    <Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
+                </Route>
+
+                <Route path="/" element={<Navigate to="/login"/>}/>
             </Routes>
         </Router>
     );

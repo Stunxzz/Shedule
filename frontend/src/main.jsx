@@ -4,6 +4,7 @@ import AppRouter from "./routes/AppRouter";
 import {AuthProvider} from "./context/useAuth";
 import {ThemeProvider} from "@mui/material/styles";
 import theme from "./theme";
+import Navbar from "./components/Navbar.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
@@ -14,3 +15,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </AuthProvider>
     </React.StrictMode>
 );
+
