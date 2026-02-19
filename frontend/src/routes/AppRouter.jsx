@@ -2,6 +2,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
+import CreateGroupPage from '../pages/Groups/CreateGroupPage.jsx';
 import {useAuth} from "../context/useAuth";
 import MainLayout from "../components/layout/MainLayout";
 
@@ -28,8 +29,8 @@ export default function AppRouter() {
                 <Route path="/register" element={<PublicRoute><RegisterPage/></PublicRoute>}/>
                 <Route element={<MainLayout/>}>
                     <Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
+                    <Route path="/groups/create" element={<PrivateRoute><CreateGroupPage/></PrivateRoute>}/>
                 </Route>
-
                 <Route path="/" element={<Navigate to="/login"/>}/>
             </Routes>
         </Router>

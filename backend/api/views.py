@@ -1,11 +1,12 @@
 from django.contrib.auth.models import Group, Permission
-from rest_framework.views import APIView
+
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissions
 from rest_framework import status, generics, viewsets
 
+from permissions.serializers import GroupSerializer, PermissionSerializer
 from .models import AppUser
-from .serializers import RegisterSerializer, ProfileSerializer, UserSerializer, GroupSerializer, PermissionSerializer
+from .serializers import RegisterSerializer, ProfileSerializer, UserSerializer
 
 
 class RegisterView(generics.CreateAPIView):
