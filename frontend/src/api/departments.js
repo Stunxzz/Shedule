@@ -1,0 +1,27 @@
+import api from './axios';
+
+export const fetchDepartments = async () => {
+    const res = await api.get('/departments/');
+    return res.data;
+};
+
+export const fetchDepartment = async (id) => {
+    const res = await api.get(`/departments/${id}/`);
+    return res.data;
+};
+
+export const createDepartment = async (data) => {
+    const res = await api.post('/departments/', data);
+    console.log(res);
+    return res.data;
+};
+
+export const updateDepartment = async (id, data) => {
+    const res = await api.put(`/departments/${id}/`, data);
+    return res.data;
+};
+
+export const deleteDepartment = async (id) => {
+    const res = await api.delete(`/departments/${id}/`);
+    return res.data;
+};
