@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group, Permission
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissions
 from rest_framework import status, generics, viewsets
+from rest_framework.views import APIView
 
 from permissions.serializers import GroupSerializer, PermissionSerializer
 from .models import AppUser
@@ -44,3 +45,18 @@ class PermissionViewSet(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
     permission_classes = [DjangoModelPermissions]
+
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "is_superuser": user.is_superuser,
+            "groups": [g.name for g in user.groups.all()],
+            "permissions": list(user.get_all_permissions()),
+        })
