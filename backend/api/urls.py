@@ -5,7 +5,7 @@ from .views import (
     GroupViewSet,
     PermissionViewSet,
     RegisterView,
-    ProfileView,
+    ProfileView, CurrentUserView,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -21,6 +21,7 @@ urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("profile/", ProfileView.as_view(), name="profile"),
+    path("me/", CurrentUserView.as_view(), name="current-user"),
 
     # CRUD endpoints от Router
     path("", include(router.urls)),

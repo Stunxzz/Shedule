@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Permission, Group
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 from .models import AppUser
 from django.contrib.auth.password_validation import validate_password
@@ -37,23 +37,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppUser
         fields = ["email", "first_name", "last_name", "avatar"]
-
-
-class PermissionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Permission
-        fields = ["id", "name", "codename"]
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    permissions = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Permission.objects.all()
-    )
-
-    class Meta:
-        model = Group
-        fields = ["id", "name", "permissions"]
 
 
 class UserSerializer(serializers.ModelSerializer):

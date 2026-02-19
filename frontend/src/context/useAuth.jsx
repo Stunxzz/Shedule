@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
           refresh: localStorage.getItem("refreshToken"),
         });
         setTokens({ access: res.data.access, refresh: localStorage.getItem("refreshToken") });
-        const profileRes = await api.get("profile/");
+        const profileRes = await api.get("me/");
         setUser(profileRes.data);
       } catch {
         setUser(null);
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     setTokens({ access: res.data.access, refresh: res.data.refresh });
     localStorage.setItem("refreshToken", res.data.refresh);
 
-    const profileRes = await api.get("profile/");
+    const profileRes = await api.get("me/");
     setUser(profileRes.data);
   };
 

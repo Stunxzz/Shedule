@@ -12,7 +12,7 @@ export const AuthProvider = ({children}) => {
         const initUser = async () => {
             try {
                 // опитай да вземеш profile с текущ access token или refresh token
-                const res = await api.get("profile/");
+                const res = await api.get("me/");
                 setUser(res.data);
             } catch (err) {
                 setUser(null);
