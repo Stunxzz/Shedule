@@ -1,5 +1,9 @@
 from django.contrib.auth.models import Group
 from rest_framework import serializers
+
+from departments.models import Department
+from departments.serializers import DepartmentSerializer
+from permissions.serializers import GroupSerializer
 from .models import AppUser
 from django.contrib.auth.password_validation import validate_password
 
@@ -41,9 +45,17 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
-    groups = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=Group.objects.all()
+
+    # За display (read-only)
+    groups = GroupSerializer(many=True, read_only=True)
+    department = DepartmentSerializer(read_only=True)
+
+    # За write/update
+    groups_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Group.objects.all(), many=True, write_only=True, required=False
+    )
+    department_id = serializers.PrimaryKeyRelatedField(
+        queryset=Department.objects.all(), write_only=True, required=False, allow_null=True
     )
 
     class Meta:
@@ -55,23 +67,42 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "password",
             "is_active",
+            'avatar',
             "is_staff",
-            "groups",
+            "groups",       # nested за display
+            "groups_ids",   # за update
+            "department",   # nested за display
+            "department_id" # за update
         ]
 
     def create(self, validated_data):
+        groups_data = validated_data.pop("groups_ids", [])
+        department = validated_data.pop("department_id", None)
         password = validated_data.pop("password", None)
+
         user = AppUser(**validated_data)
+        if department:
+            user.department = department
         if password:
             user.set_password(password)
         user.save()
+        user.groups.set(groups_data)
         return user
 
     def update(self, instance, validated_data):
+        groups_data = validated_data.pop("groups_ids", None)
+        department = validated_data.pop("department_id", None)
         password = validated_data.pop("password", None)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
+        if department is not None:
+            instance.department = department
         if password:
             instance.set_password(password)
         instance.save()
+
+        if groups_data is not None:
+            instance.groups.set(groups_data)
+
         return instance

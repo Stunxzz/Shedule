@@ -30,7 +30,7 @@ class ProfileView(generics.RetrieveAPIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = AppUser.objects.all()
+    queryset = AppUser.objects.all().select_related('department').prefetch_related('groups')
     serializer_class = UserSerializer
     permission_classes = [DjangoModelPermissions]
 

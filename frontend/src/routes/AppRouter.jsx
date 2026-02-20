@@ -11,7 +11,9 @@ import AdminRoute from "../components/AdminRoute.jsx";
 import EditDepartmentPage from "../pages/departments/EditDepartmentPage.jsx";
 import CreateDepartmentPage from "../pages/departments/CreateDepartmentPage.jsx";
 import DepartmentList from "../pages/departments/DepartmentList.jsx";
-
+import UserPage from "../pages/users/UserPage.jsx";
+import UserEditPage from "../pages/users/UserEdit.jsx";
+import UserProfilePage from "../pages/users/UserProfilePage.jsx";
 // PrivateRoute - за защитени страници
 const PrivateRoute = ({children}) => {
     const {user, loading} = useAuth();
@@ -41,6 +43,10 @@ export default function AppRouter() {
                     <Route path="/departments" element={<PrivateRoute><DepartmentList/></PrivateRoute>}/>
                     <Route path="/departments/create" element={<AdminRoute><CreateDepartmentPage/></AdminRoute>}/>
                     <Route path="/departments/edit/:id" element={<AdminRoute><EditDepartmentPage/></AdminRoute>}/>
+                     <Route path="/users" element={<PrivateRoute><UserPage/></PrivateRoute>}/>
+                    <Route path="/users/:id/edit" element={<PrivateRoute><UserEditPage/></PrivateRoute>}/>
+                    <Route path="/profile/:id/" element={<PrivateRoute><UserProfilePage/></PrivateRoute>}/>
+
                 </Route>
                 <Route path="/" element={<Navigate to="/login"/>}/>
             </Routes>
