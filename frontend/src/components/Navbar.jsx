@@ -16,7 +16,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 const navItems = [
-  { label: "About", path: "/about" },
+  { label: "Departments", path: "/departments" },
   { label: "Profile", path: "/profile" },
   { label: "Groups", path: "/groups" },
   { label: "Dashboard", path: "/dashboard" },
