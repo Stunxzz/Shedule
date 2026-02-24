@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group, Permission
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated, DjangoModelPermissions
@@ -30,25 +31,29 @@ class ProfileView(generics.RetrieveAPIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = AppUser.objects.all()
+    queryset = AppUser.objects.all().order_by('first_name')
     serializer_class = UserSerializer
     permission_classes = [DjangoModelPermissions]
+    search_fields = ['first_name', 'email']
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
+    queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
     permission_classes = [DjangoModelPermissions]
+    search_fields = ['name']
 
 
 class PermissionViewSet(viewsets.ModelViewSet):
-    queryset = Permission.objects.all()
+    queryset = Permission.objects.order_by("content_type__app_label", "codename")
     serializer_class = PermissionSerializer
     permission_classes = [DjangoModelPermissions]
+    pagination_class = None
 
 
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def get(self, request):
         user = request.user
@@ -58,5 +63,31 @@ class CurrentUserView(APIView):
             "last_name": user.last_name,
             "is_superuser": user.is_superuser,
             "groups": [g.name for g in user.groups.all()],
-            "permissions": list(user.get_all_permissions()),
+            "department": user.department.name if user.department else None,
+            "email": user.email,
+            "avatar": user.avatar.url if user.avatar else None,
         })
+
+    def put(self, request):
+        user = request.user
+        data = request.data
+
+        # Разрешени полета за редакция
+        allowed_fields = ["first_name", "last_name", "avatar", 'email']
+
+        for field in allowed_fields:
+            if field in data:
+                setattr(user, field, data[field])
+
+        user.save()
+
+        return Response({
+            "id": user.id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "is_superuser": user.is_superuser,
+            "groups": [g.name for g in user.groups.all()],
+            "department": user.department.name if user.department else None,
+            "email": user.email,
+            "avatar": user.avatar.url if user.avatar else None,
+        }, status=status.HTTP_200_OK)

@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "api",
-    "permissions"
+    "permissions",
+    "departments"
 ]
 
 MIDDLEWARE = [
@@ -131,12 +132,18 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,
+
+    "DEFAULT_FILTER_BACKENDS": [
+        "rest_framework.filters.SearchFilter",
+    ]
 }
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-#ЗА ДЕВ FALSE
+# ЗА ДЕВ FALSE
 CORS_ALLOW_CREDENTIALS = True
 
 # Static files (CSS, JavaScript, Images)
