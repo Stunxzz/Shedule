@@ -12,7 +12,6 @@ export const fetchDepartment = async (id) => {
 
 export const createDepartment = async (data) => {
     const res = await api.post('/departments/', data);
-    console.log(res);
     return res.data;
 };
 

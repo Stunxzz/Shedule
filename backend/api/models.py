@@ -41,7 +41,6 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     )
 
     date_joined = models.DateTimeField(auto_now_add=True)
-    # Relations
     department = models.ForeignKey(
         Department,
         null=True,

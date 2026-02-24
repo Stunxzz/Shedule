@@ -1,34 +1,58 @@
-import { Box } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import DepartmentForm from '../../components/departments/DepartmentForm';
-import { fetchDepartment, updateDepartment } from '../../api/departments';
+// frontend/src/pages/EditDepartmentPage.jsx
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import DepartmentForm from "../../components/Departments/DepartmentForm.jsx";
+import api from "../../api/axios.js";
+import { CircularProgress, Box } from "@mui/material";
 
-export default function EditDepartmentPage() {
+const EditDepartmentPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [department, setDepartment] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const load = async () => {
-      const data = await fetchDepartment(id);
-      setDepartment(data);
+    const loadDepartment = async () => {
+      try {
+        const res = await api.get(`/departments/${id}/`);
+        setDepartment(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
-    load();
+
+    loadDepartment();
   }, [id]);
 
-  const handleUpdate = async (data) => {
-    const res = await updateDepartment(id, data);
-    navigate('/departments', {
-      state: { message: `Department "${res.name}" updated successfully`, severity: 'success' },
-    });
+  const handleUpdate = async (data, setSnackbar) => {
+    try {
+      await api.put(`/departments/${id}/`, data);
+      setSnackbar({
+        open: true,
+        message: "Department updated successfully!",
+        severity: "success",
+      });
+      setTimeout(() => navigate("/departments"), 800);
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.name?.[0] || "Failed to update department",
+        severity: "error",
+      });
+    }
   };
 
-  if (!department) return null; // loader optional
+  if (loading) {
+    return (
+      <Box textAlign="center" mt={4}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-  return (
-    <Box sx={{ p: 0 }}>
-      <DepartmentForm initialData={department} onSubmit={handleUpdate} />
-    </Box>
-  );
-}
+  return <DepartmentForm initialData={department} onSubmit={handleUpdate} />;
+};
+
+export default EditDepartmentPage;

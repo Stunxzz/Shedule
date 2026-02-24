@@ -2,15 +2,17 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
-import CreateGroupPage from '../pages/Groups/CreateGroupPage.jsx';
 import {useAuth} from "../context/useAuth";
 import MainLayout from "../components/layout/MainLayout";
-import GroupsList from "../components/GroupsAndPermissions/GroupsList.jsx";
-import EditGroupPage from "../pages/Groups/EditGroupPage.jsx";
+import GroupsPage from "../pages/groups/GroupsPage.jsx";
 import AdminRoute from "../components/AdminRoute.jsx";
+import UsersPage from "../pages/UsersPage.jsx";
+import EditUserPage from "../pages/EditUserPage.jsx";
+import EditGroupPage from "../pages/groups/EditGroupPage.jsx";
+import CreateGroupPage from "../pages/groups/CreateGroupPage.jsx";
+import DepartmentsPage from "../pages/departments/DepartmentsPage.jsx";
 import EditDepartmentPage from "../pages/departments/EditDepartmentPage.jsx";
 import CreateDepartmentPage from "../pages/departments/CreateDepartmentPage.jsx";
-import DepartmentList from "../pages/departments/DepartmentList.jsx";
 
 // PrivateRoute - за защитени страници
 const PrivateRoute = ({children}) => {
@@ -35,12 +37,15 @@ export default function AppRouter() {
                 <Route path="/register" element={<PublicRoute><RegisterPage/></PublicRoute>}/>
                 <Route element={<MainLayout/>}>
                     <Route path="/profile" element={<PrivateRoute><ProfilePage/></PrivateRoute>}/>
-                    <Route path="/groups" element={<AdminRoute><GroupsList/></AdminRoute>}/>
+                    <Route path="/groups" element={<AdminRoute><GroupsPage/></AdminRoute>}/>
                     <Route path="/groups/create" element={<AdminRoute><CreateGroupPage/></AdminRoute>}/>
                     <Route path="/groups/edit/:id" element={<AdminRoute><EditGroupPage/></AdminRoute>}/>
-                    <Route path="/departments" element={<PrivateRoute><DepartmentList/></PrivateRoute>}/>
-                    <Route path="/departments/create" element={<PrivateRoute><CreateDepartmentPage/></PrivateRoute>}/>
-                    <Route path="/departments/edit/:id" element={<PrivateRoute><EditDepartmentPage/></PrivateRoute>}/>
+                    <Route path="/users" element={<AdminRoute><UsersPage/></AdminRoute>}/>
+                    <Route path="/users/edit/:id" element={<AdminRoute><EditUserPage/></AdminRoute>}/>
+                    <Route path="/departments" element={<AdminRoute><DepartmentsPage/></AdminRoute>}/>
+                    <Route path="/departments/create" element={<AdminRoute><CreateDepartmentPage/></AdminRoute>}/>
+                    <Route path="/departments/edit/:id" element={<AdminRoute><EditDepartmentPage/></AdminRoute>}/>
+
                 </Route>
                 <Route path="/" element={<Navigate to="/login"/>}/>
             </Routes>

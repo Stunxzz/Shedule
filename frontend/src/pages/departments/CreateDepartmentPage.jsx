@@ -1,21 +1,31 @@
-import { Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import DepartmentForm from '../../components/departments/DepartmentForm';
-import { createDepartment } from '../../api/departments';
+// frontend/src/pages/CreateDepartmentPage.jsx
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import DepartmentForm from "../../components/Departments/DepartmentForm.jsx";
+import api from "../../api/axios.js";
 
-export default function CreateDepartmentPage() {
+const CreateDepartmentPage = () => {
   const navigate = useNavigate();
 
-  const handleCreate = async (data) => {
-    const res = await createDepartment(data);
-    navigate('/departments', {
-      state: { message: `Department "${res.name}" created successfully`, severity: 'success' },
-    });
+  const handleCreate = async (data, setSnackbar) => {
+    try {
+      await api.post("/departments/", data);
+      setSnackbar({
+        open: true,
+        message: "Department created successfully!",
+        severity: "success",
+      });
+      setTimeout(() => navigate("/departments"), 800);
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.name?.[0] || "Failed to create department",
+        severity: "error",
+      });
+    }
   };
 
-  return (
-    <Box sx={{ p: 0 }}>
-      <DepartmentForm onSubmit={handleCreate} />
-    </Box>
-  );
-}
+  return <DepartmentForm onSubmit={handleCreate} />;
+};
+
+export default CreateDepartmentPage;
