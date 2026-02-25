@@ -1,14 +1,16 @@
 import AppRouter from "./routes/AppRouter";
-import { AuthProvider } from "./context/AuthProvider";
-import Navbar from "./components/Navbar.jsx";
+import {AuthProvider} from "./context/AuthProvider";
+import SnackbarProvider from "./providers/SnackbarProvider";
 
 
 function App() {
-  return (
-    <AuthProvider>
-      <AppRouter />
-    </AuthProvider>
-  );
+    return (
+        <SnackbarProvider>
+            <AuthProvider>
+                <AppRouter/>
+            </AuthProvider>
+        </SnackbarProvider>
+    );
 }
 
 export default App;

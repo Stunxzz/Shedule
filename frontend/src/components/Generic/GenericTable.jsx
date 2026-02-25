@@ -1,4 +1,3 @@
-// frontend/src/components/Generic/GenericTable.jsx
 import React from "react";
 import {
     Table, TableHead, TableRow, TableCell, TableBody,
@@ -55,7 +54,6 @@ export const GenericTable = ({
                             textTransform: "none",
                             boxShadow: "0 6px 18px rgba(0,0,0,0.15)",
                             transition: "all 0.3s ease",
-
                             "&:hover": {
                                 transform: "translateY(-2px)",
                                 boxShadow: "0 10px 24px rgba(0,0,0,0.2)",
@@ -96,9 +94,14 @@ export const GenericTable = ({
                                                     <Typography variant="caption" color="text.secondary">
                                                         {col.label}
                                                     </Typography>
-                                                    <Typography variant="body2">
-                                                        {col.render ? col.render(row) : row[col.field]}
-                                                    </Typography>
+                                                    {/* FIX: не wrap-ваме block елементи с Typography */}
+                                                    {col.render ? (
+                                                        col.render(row)
+                                                    ) : (
+                                                        <Typography variant="body2">
+                                                            {row[col.field]}
+                                                        </Typography>
+                                                    )}
                                                 </Box>
                                             ))}
                                         </Stack>

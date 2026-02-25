@@ -10,17 +10,17 @@ import {
   CircularProgress,
   Box,
   Autocomplete,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 
 import { fetchUser, updateUser } from "../api/user.js";
 import { fetchDepartments } from "../api/departments.js";
 import { fetchGroups } from "../api/groups.js";
+import { useSnackbar } from "../context/snackbar-context.js";
 
 const EditUserPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar(); // глобален snackbar
 
   const [userData, setUserData] = useState({
     first_name: "",
@@ -35,7 +35,6 @@ const EditUserPage = () => {
   const [departments, setDepartments] = useState([]);
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     const loadData = async () => {
@@ -82,11 +81,11 @@ const EditUserPage = () => {
   const handleSubmit = async () => {
     try {
       await updateUser(id, userData);
-      setSnackbar({ open: true, message: "User updated successfully!", severity: "success" });
+      showSnackbar("User updated successfully!", "success");
       setTimeout(() => navigate("/users"), 1000);
     } catch (err) {
       console.error(err);
-      setSnackbar({ open: true, message: "Failed to update user!", severity: "error" });
+      showSnackbar("Failed to update user!", "error");
     }
   };
 
@@ -98,81 +97,78 @@ const EditUserPage = () => {
     );
 
   return (
-    <>
-      <Card sx={{ maxWidth: 600, margin: "40px auto", p: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-            Edit User
-          </Typography>
+    <Card sx={{ maxWidth: 600, margin: "40px auto", p: 3 }}>
+      <CardContent>
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+          Edit User
+        </Typography>
 
-          <Stack spacing={2}>
-            <TextField
-              label="First Name"
-              name="first_name"
-              value={userData.first_name}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="Last Name"
-              name="last_name"
-              value={userData.last_name}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="Email"
-              name="email"
-              value={userData.email}
-              onChange={handleChange}
-              fullWidth
-              size="small"
-            />
+        <Stack spacing={2}>
+          <TextField
+            label="First Name"
+            name="first_name"
+            value={userData.first_name}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+          />
+          <TextField
+            label="Last Name"
+            name="last_name"
+            value={userData.last_name}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={userData.email}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+          />
 
-            {/* Department select */}
-            <Autocomplete
-              options={departments}
-              getOptionLabel={(option) => option.name}
-              value={departments.find((d) => d.id === userData.department_id) || null}
-              onChange={handleDepartmentChange}
-              renderInput={(params) => <TextField {...params} label="Department" size="small" />}
-            />
+          {/* Department select */}
+          <Autocomplete
+            options={departments}
+            getOptionLabel={(option) => option.name}
+            value={departments.find((d) => d.id === userData.department_id) || null}
+            onChange={handleDepartmentChange}
+            renderInput={(params) => <TextField {...params} label="Department" size="small" />}
+          />
 
-            {/* Groups multi-select */}
-            <Autocomplete
-              multiple
-              options={groups}
-              getOptionLabel={(option) => option.name}
-              value={groups.filter((g) => userData.groups_ids.includes(g.id))}
-              onChange={handleGroupsChange}
-              renderInput={(params) => <TextField {...params} label="Groups" size="small" />}
-            />
+          {/* Groups multi-select */}
+          <Autocomplete
+            multiple
+            options={groups}
+            getOptionLabel={(option) => option.name}
+            value={groups.filter((g) => userData.groups_ids.includes(g.id))}
+            onChange={handleGroupsChange}
+            renderInput={(params) => <TextField {...params} label="Groups" size="small" />}
+          />
 
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
-              <Button variant="outlined" onClick={() => navigate("/users")}>
-                Cancel
-              </Button>
-              <Button variant="contained" color="secondary" onClick={handleSubmit}>
-                Save
-              </Button>
-            </Stack>
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button variant="outlined" onClick={() => navigate("/users")}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{
+                background:  "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                color: "white",
+                "&:hover": {
+                  background:  "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                },
+              }}
+            >
+              Save
+            </Button>
           </Stack>
-        </CardContent>
-      </Card>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert severity={snackbar.severity} variant="filled" sx={{ width: "100%" }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 

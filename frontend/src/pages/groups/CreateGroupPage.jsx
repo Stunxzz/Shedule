@@ -1,47 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios.js";
 import GroupForm from "../../components/GroupsAndPermissions/CreateGroupForm.jsx";
-import { Snackbar, Alert } from "@mui/material";
+import { useSnackbar } from "../../context/snackbar-context"; // само hook
 
 const CreateGroupPage = () => {
     const navigate = useNavigate();
-    const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+    const { showSnackbar } = useSnackbar(); // ✅ hook вътре в компонент;
 
     const handleCreate = async (data) => {
         try {
             await api.post("/groups/", data);
-            setSnackbar({ open: true, message: "Group created successfully!", severity: "success" });
-
+            showSnackbar("Group created successfully!", "success");
             setTimeout(() => navigate("/groups"), 800);
         } catch (err) {
-            setSnackbar({
-                open: true,
-                message: err.response?.data?.name?.[0] || "Failed to create group",
-                severity: "error",
-            });
+            showSnackbar(err.response?.data?.name?.[0] || "Failed to create group", "error");
         }
     };
 
-    return (
-        <>
-            <GroupForm onSubmit={handleCreate} />
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={4000}
-                onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
-                <Alert
-                    onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
-                    severity={snackbar.severity}
-                    sx={{ width: "100%" }}
-                >
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
-        </>
-    );
+    return <GroupForm onSubmit={handleCreate} />;
 };
 
 export default CreateGroupPage;

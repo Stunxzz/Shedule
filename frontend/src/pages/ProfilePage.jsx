@@ -8,24 +8,18 @@ import {
     Avatar,
     TextField,
     Chip,
-    Snackbar,
-    Alert,
     Box,
     Divider,
-    Paper,
 } from "@mui/material";
 import {useAuth} from "../context/useAuth";
 import {updateCurrentUser} from "../api/user";
+import {useSnackbar} from "../context/snackbar-context"; // <- глобален Snackbar
 
 export default function ProfilePage() {
     const {user: currentUser, logout} = useAuth();
+    const {showSnackbar} = useSnackbar(); // <- hook за глобален Snackbar
     const [profile, setProfile] = useState({...currentUser, avatarFile: null});
     const [saving, setSaving] = useState(false);
-    const [snackbar, setSnackbar] = useState({
-        open: false,
-        message: "",
-        severity: "success",
-    });
 
     const backendUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -56,11 +50,8 @@ export default function ProfilePage() {
 
             await updateCurrentUser(formData);
 
-            setSnackbar({
-                open: true,
-                message: "Profile updated successfully",
-                severity: "success",
-            });
+            // Използваме глобален Snackbar вместо локален
+            showSnackbar("Profile updated successfully", "success");
 
             if (profile.avatarFile) {
                 setProfile((prev) => ({
@@ -70,12 +61,8 @@ export default function ProfilePage() {
                 }));
             }
         } catch (err) {
-            console.error(err)
-            setSnackbar({
-                open: true,
-                message: "Something went wrong",
-                severity: "error",
-            });
+            console.error(err);
+            showSnackbar("Something went wrong", "error");
         } finally {
             setSaving(false);
         }
@@ -187,11 +174,7 @@ export default function ProfilePage() {
 
                             {/* Groups */}
                             <Box>
-                                <Typography
-                                    variant="subtitle1"
-                                    fontWeight={600}
-                                    mb={1}
-                                >
+                                <Typography variant="subtitle1" fontWeight={600} mb={1}>
                                     Access Groups
                                 </Typography>
                                 <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -257,19 +240,6 @@ export default function ProfilePage() {
                     </Stack>
                 </Card>
             </Container>
-
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={4000}
-                onClose={() =>
-                    setSnackbar((prev) => ({...prev, open: false}))
-                }
-                anchorOrigin={{vertical: "top", horizontal: "center"}}
-            >
-                <Alert severity={snackbar.severity}>
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 }

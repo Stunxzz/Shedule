@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import Group, Permission
+from rest_framework.validators import UniqueValidator
 
 from api.models import AppUser
 
@@ -8,6 +9,13 @@ from django.contrib.auth.models import Group, Permission
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        max_length=150,
+        validators=[UniqueValidator(
+            queryset=Group.objects.all(),
+            message="Group with this name already exists."
+        )]
+    )
     # Поле за показване на имената на правата
     permissions_display = serializers.SerializerMethodField(read_only=True)
 
