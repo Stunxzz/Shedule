@@ -17,6 +17,7 @@ import {useAuth} from "../context/useAuth";
 
 const navItems = [
     {label: "Users", path: "/users"},
+    {label: "Employees", path: "/employees"},
     {label: "Profile", path: "/profile"},
     {label: "Groups", path: "/groups"},
     {label: "Departments", path: "/departments"},

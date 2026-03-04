@@ -1,9 +1,10 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import DepartmentViewSet
+from .views import DepartmentViewSet, DepartmentAllView
 
 router = DefaultRouter()
 router.register(r'departments', DepartmentViewSet, basename='departments')
 urlpatterns = [
+    path('departments/all/', DepartmentAllView.as_view(), name='departments-all'),
     path('', include(router.urls))
 ]
