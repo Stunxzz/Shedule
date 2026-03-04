@@ -24,3 +24,7 @@ export const deleteDepartment = async (id) => {
     const res = await api.delete(`/departments/${id}/`);
     return res.data;
 };
+export const fetchAllDepartments = async () => {
+  const res = await api.get('/departments/all/');
+  return res.data;
+};

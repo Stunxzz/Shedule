@@ -13,6 +13,9 @@ import CreateGroupPage from "../pages/groups/CreateGroupPage.jsx";
 import DepartmentsPage from "../pages/departments/DepartmentsPage.jsx";
 import EditDepartmentPage from "../pages/departments/EditDepartmentPage.jsx";
 import CreateDepartmentPage from "../pages/departments/CreateDepartmentPage.jsx";
+import EmployeeList from '../pages/employees/EmployeeList.jsx';
+import EmployeeCreatePage from "../pages/employees/EmployeeCreatePage.jsx";
+import EmployeeEditPage from "../pages/employees/EmployeeEditPage.jsx";
 
 // PrivateRoute - за защитени страници
 const PrivateRoute = ({children}) => {
@@ -45,6 +48,9 @@ export default function AppRouter() {
                     <Route path="/departments" element={<AdminRoute><DepartmentsPage/></AdminRoute>}/>
                     <Route path="/departments/create" element={<AdminRoute><CreateDepartmentPage/></AdminRoute>}/>
                     <Route path="/departments/edit/:id" element={<AdminRoute><EditDepartmentPage/></AdminRoute>}/>
+                    <Route path="/employees" element={<AdminRoute><EmployeeList/></AdminRoute>}/>
+                    <Route path="/employee/create" element={<EmployeeCreatePage/>}/>
+                    <Route path="/employee/edit/:id" element={<EmployeeEditPage/>}/>
 
                 </Route>
                 <Route path="/" element={<Navigate to="/login"/>}/>
