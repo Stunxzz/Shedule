@@ -48,10 +48,10 @@ export default function AppRouter() {
                     <Route path="/groups/edit/:id" element={<AdminRoute><EditGroupPage/></AdminRoute>}/>
                     <Route path="/users" element={<AdminRoute><UsersPage/></AdminRoute>}/>
                     <Route path="/users/edit/:id" element={<AdminRoute><EditUserPage/></AdminRoute>}/>
-                    <Route path="/departments" element={<AdminRoute><DepartmentsPage/></AdminRoute>}/>
+                    <Route path="/departments" element={<PrivateRoute><DepartmentsPage/></PrivateRoute>}/>
                     <Route path="/departments/create" element={<AdminRoute><CreateDepartmentPage/></AdminRoute>}/>
                     <Route path="/departments/edit/:id" element={<AdminRoute><EditDepartmentPage/></AdminRoute>}/>
-                    <Route path="/employees" element={<AdminRoute><EmployeeList/></AdminRoute>}/>
+                    <Route path="/employees" element={<PrivateRoute><EmployeeList/></PrivateRoute>}/>
                     <Route path="/employee/create" element={<PrivateRoute><EmployeeCreatePage/></PrivateRoute>}/>
                     <Route path="/employee/edit/:id" element={<PrivateRoute><EmployeeEditPage/></PrivateRoute>}/>
                     <Route path="/schedules" element={<PrivateRoute><DepartmentListPage/></PrivateRoute>}/>

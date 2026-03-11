@@ -30,9 +30,6 @@ export default function EmployeeCreatePage() {
 
   return (
     <Box sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
-      <Typography variant="h5" sx={{ mb: 3 }}>
-        Create New Employee
-      </Typography>
 
       <EmployeeForm onSubmit={handleCreate} />
     </Box>

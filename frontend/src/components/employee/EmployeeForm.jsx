@@ -9,8 +9,8 @@ import {
     CircularProgress
 } from '@mui/material';
 
-import { fetchDepartments } from '../../api/departments';
-import { fetchRoutes } from '../../api/routes';
+import {fetchAllDepartments} from '../../api/departments';
+import { fetchAllRoutes } from '../../api/routes';
 import { useSnackbar } from '../../context/snackbar-context.js';
 
 export default function EmployeeForm({ initialData = null, onSubmit }) {
@@ -30,12 +30,12 @@ export default function EmployeeForm({ initialData = null, onSubmit }) {
         const loadData = async () => {
             try {
                 const [deps, rts] = await Promise.all([
-                    fetchDepartments(),
-                    fetchRoutes()
+                    fetchAllDepartments(),
+                    fetchAllRoutes()
                 ]);
 
-                setDepartments(deps.results || []);
-                setRoutes(rts.results || []);
+                setDepartments(deps || []);
+                setRoutes(rts || []);
             } catch (err) {
                 console.error(err);
                 showSnackbar('Failed to load departments or routes', 'error');

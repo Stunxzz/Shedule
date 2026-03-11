@@ -17,6 +17,7 @@ import {useAuth} from "../context/useAuth";
 
 const navItems = [
     {label: "Users", path: "/users"},
+    {label: "Schedules", path: "/schedules"},
     {label: "Employees", path: "/employees"},
     {label: "Profile", path: "/profile"},
     {label: "Groups", path: "/groups"},
@@ -37,6 +38,9 @@ export default function Navbar() {
 
     const filteredNav = navItems.filter((item) => {
         if (item.path === "/groups") {
+            return user?.is_superuser || user?.groups?.includes("Admin");
+        }
+        if (item.path === "/users") {
             return user?.is_superuser || user?.groups?.includes("Admin");
         }
         return true;
