@@ -16,6 +16,9 @@ import CreateDepartmentPage from "../pages/departments/CreateDepartmentPage.jsx"
 import EmployeeList from '../pages/employees/EmployeeList.jsx';
 import EmployeeCreatePage from "../pages/employees/EmployeeCreatePage.jsx";
 import EmployeeEditPage from "../pages/employees/EmployeeEditPage.jsx";
+import SchedulePage from "../pages/employees/SchedulePage.jsx";
+import DepartmentListPage from "../pages/employees/DepartmentListPage.jsx";
+import ScheduleViewPage from "../pages/employees/ScheduleViewPage.jsx";
 
 // PrivateRoute - за защитени страници
 const PrivateRoute = ({children}) => {
@@ -45,12 +48,17 @@ export default function AppRouter() {
                     <Route path="/groups/edit/:id" element={<AdminRoute><EditGroupPage/></AdminRoute>}/>
                     <Route path="/users" element={<AdminRoute><UsersPage/></AdminRoute>}/>
                     <Route path="/users/edit/:id" element={<AdminRoute><EditUserPage/></AdminRoute>}/>
-                    <Route path="/departments" element={<AdminRoute><DepartmentsPage/></AdminRoute>}/>
+                    <Route path="/departments" element={<PrivateRoute><DepartmentsPage/></PrivateRoute>}/>
                     <Route path="/departments/create" element={<AdminRoute><CreateDepartmentPage/></AdminRoute>}/>
                     <Route path="/departments/edit/:id" element={<AdminRoute><EditDepartmentPage/></AdminRoute>}/>
-                    <Route path="/employees" element={<AdminRoute><EmployeeList/></AdminRoute>}/>
-                    <Route path="/employee/create" element={<EmployeeCreatePage/>}/>
-                    <Route path="/employee/edit/:id" element={<EmployeeEditPage/>}/>
+                    <Route path="/employees" element={<PrivateRoute><EmployeeList/></PrivateRoute>}/>
+                    <Route path="/employee/create" element={<PrivateRoute><EmployeeCreatePage/></PrivateRoute>}/>
+                    <Route path="/employee/edit/:id" element={<PrivateRoute><EmployeeEditPage/></PrivateRoute>}/>
+                    <Route path="/schedules" element={<PrivateRoute><DepartmentListPage/></PrivateRoute>}/>
+                    <Route path="/schedules/create/:departmentId/:week"
+                           element={<PrivateRoute><SchedulePage mode="edit"/></PrivateRoute>}/>
+                    <Route path="/schedules/view/:departmentId/:week"
+                           element={<PrivateRoute><ScheduleViewPage mode="view"/></PrivateRoute>}/>
 
                 </Route>
                 <Route path="/" element={<Navigate to="/login"/>}/>
