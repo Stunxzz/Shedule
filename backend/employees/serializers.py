@@ -49,6 +49,15 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    employee_name = serializers.CharField(source="employee.full_name", read_only=True)
+
     class Meta:
         model = Schedule
-        fields = ['id', 'employee', 'date', 'shift', 'working_place', 'created_by']
+        fields = [
+            "id",
+            "employee",
+            "employee_name",
+            "date",
+            "shift",
+            "working_place",
+        ]

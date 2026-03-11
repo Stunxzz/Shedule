@@ -41,9 +41,12 @@ INSTALLED_APPS = [
     "permissions",
     "departments",
     "employees",
+    'debug_toolbar',  # Debug Toolbar
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,7 +56,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
